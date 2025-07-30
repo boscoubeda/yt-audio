@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: yt-audio-extractor
+    env: python
+    buildCommand: ""
+    startCommand: "python main.py"
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "true"
+    autoDeploy: true

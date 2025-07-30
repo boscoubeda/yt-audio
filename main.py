@@ -1,0 +1,32 @@
+from flask import Flask, request, jsonify
+import subprocess
+import uuid
+import os
+
+app = Flask(__name__)
+
+AUDIO_FOLDER = "static/audio"
+os.makedirs(AUDIO_FOLDER, exist_ok=True)
+
+@app.route("/extract", methods=["POST"])
+def extract_audio():
+    data = request.get_json()
+    video_url = data.get("url")
+    if not video_url:
+        return jsonify({"error": "Missing YouTube URL"}), 400
+
+    filename = f"{uuid.uuid4()}.mp3"
+    filepath = os.path.join(AUDIO_FOLDER, filename)
+
+    try:
+        # Descargar el audio
+        subprocess.run([
+            "yt-dlp", "-x", "--audio-format", "mp3", "-o", filepath, video_url
+        ], check=True)
+
+        # Construir URL pública
+        audio_url = request.host_url + f"static/audio/{filename}"
+
+        return jsonify({"audio_url": audio_url})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
