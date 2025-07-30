@@ -19,14 +19,16 @@ def extract_audio():
     filepath = os.path.join(AUDIO_FOLDER, filename)
 
     try:
-        # Descargar el audio
         subprocess.run([
             "yt-dlp", "-x", "--audio-format", "mp3", "-o", filepath, video_url
         ], check=True)
 
-        # Construir URL pública
         audio_url = request.host_url + f"static/audio/{filename}"
-
         return jsonify({"audio_url": audio_url})
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# 🔽 ESTA PARTE ES CRUCIAL PARA QUE FLASK FUNCIONE EN RENDER
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
