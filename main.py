@@ -19,8 +19,11 @@ def extract_audio():
     filepath = os.path.join(AUDIO_FOLDER, filename)
 
     try:
+        # Comando yt-dlp con soporte para cookies
         subprocess.run([
-            "yt-dlp", "-x", "--audio-format", "mp3", "-o", filepath, video_url
+            "yt-dlp", "--cookies", "cookies.txt",
+            "-x", "--audio-format", "mp3",
+            "-o", filepath, video_url
         ], check=True)
 
         audio_url = request.host_url + f"static/audio/{filename}"
